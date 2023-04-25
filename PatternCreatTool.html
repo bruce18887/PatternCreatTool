@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+	<title>Demo</title><!-- 浏览器上的标题 -->
+	<head>
+		<meta charset="UTF-8">
+		
+		<!-- 导入Jexcel CSS -->
+		<link rel="stylesheet" href="./import/css/jspreadsheet.css" type="text/css">
+		<link rel="stylesheet" href="./import/css/jsuites.css" type="text/css">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="./import/css/animate.min.css">
+		<link rel="stylesheet" href="./import/css/bootstrap.min.css">
+
+		<style>
+		/* 自定义样式 */
+		.title {
+			font-size: 5rem;
+			text-align: left;
+			margin-top: 1cm;
+		}
+		/* 边框 */
+		.container-border {
+			border: 1px solid #ccc;
+			padding: 10px;
+		}
+		/* webconsole item */
+		.list-group-item-consolewarning {
+			background-color: #fff3cd;
+			border-color: #ffeeba;
+		}
+		.list-group-item-consoledanger {
+			background-color: #f8d7da;
+			border-color: #f5c6cb;
+		}
+		.list-group-item-consoleinfo {
+			background-color: #d1ecf1;
+			border-color: #bee5eb;
+		}
+		/* 隐藏了轮播指示器 */
+		/* .carousel-indicators {
+			display: none;
+		} */
+		</style>
+		
+	</head>
+
+	<body>
+		<!-- TitleBar开始 -->
+		<div class="container-fluid container-border" style="background-color: #265da7;">
+			<div class="row">
+				<div class="col-3">
+					<h1 class="title animate__animated animate__bounce">PatternCreateTool</h1>
+					<div class="badge bg-primary text-wrap" style="width: 6rem;">
+						Powered By Ikun
+					</div>
+				</div>
+				<div class="col-9">
+					<div class="container" style="max-width: 200px; overflow: hidden;">
+						<div id="carouseIndicators" class="carousel slide" data-bs-ride="carousel">
+							<div class="carousel-indicators">
+							  <button type="button" data-bs-target="#carouseIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+							  <button type="button" data-bs-target="#carouseIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+							  <button type="button" data-bs-target="#carouseIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+							</div>
+							<div class="carousel-inner">
+							  <div class="carousel-item active" data-bs-interval="3000">
+								<img src="./resource/1.png" class="d-block w-100" alt="...">
+							  </div>
+							  <div class="carousel-item" data-bs-interval="3000">
+								<img src="./resource/2.png" class="d-block w-100" alt="...">
+							  </div>
+							  <div class="carousel-item" data-bs-interval="3000">
+								<img src="./resource/3.png" class="d-block w-100" alt="...">
+							  </div>
+							</div>
+							<button class="carousel-control-prev" type="button" data-bs-target="#carouseIndicators" data-bs-slide="prev">
+							  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							  <span class="visually-hidden">Previous</span>
+							</button>
+							<button class="carousel-control-next" type="button" data-bs-target="#carouseIndicators" data-bs-slide="next">
+							  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+							  <span class="visually-hidden">Next</span>
+							</button>
+						  </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- TitleBar结束 -->
+		
+		<div class="container-fluid container-border">
+
+
+				<div class="row">
+					<div class="col-md-2 container-border"  style="background-color: antiquewhite;">
+						<!-- 左侧选项卡 -->
+						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+							<a class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">I2C</a>
+							<a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">SPI</a>
+							<a class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">UART</a>
+						</div>
+					</div>
+					<div class="col-md-10">
+						<!-- 右侧分页 -->
+						<div class="tab-content" id="v-pills-tabContent">
+
+							<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+								<form>
+									<!-- tab container Begin --> 
+									<div class="container-fluid container-border "  style="background-color: antiquewhite;">
+										<div class="row">
+											
+											<!-- I2C Input Group Begin -->
+											<div class="col d-flex align-items-center justify-content-center " >
+												<div class="container-fluid  container-border" style="background-color: antiquewhite;">
+													<div class="row">
+														<div class="col-md-6">
+															<div class="d-flex justify-content-center p-3">
+																<div class="form-floating">
+																	<input type="text" class="form-control" id="input_i2c_slaveid" maxlength="4" placeholder="" value="">
+																	<label for="input_i2c_slaveid">SlaveID</label>
+																</div>
+															</div>
+															<div class="d-flex justify-content-center p-3">
+																<div class="form-floating">
+																	<input type="text" class="form-control" id="input_i2c_address" maxlength="4"  placeholder="" value="">
+																	<label for="input_i2c_address">Address</label>
+																</div>
+															</div>
+															<div class="d-flex justify-content-center p-3">
+																<div class="form-floating">
+																	<input type="text" class="form-control" id="input_i2c_data"  maxlength="4" placeholder="" value="">
+																	<label for="input_i2c_data">Data</label>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="d-flex justify-content-center p-3">
+																<div class="form-floating">
+																	<input type="text" class="form-control" id="input_i2c_signals" placeholder="" value="">
+																	<label for="input_i2c_signals">Signals</label>
+																</div>
+															</div>
+															<div class="d-flex justify-content-center p-3">
+																<div class="form-floating">
+																	<input type="text" class="form-control" id="input_i2c_timingsetname" placeholder="" value="">
+																	<label for="input_i2c_timingsetname">TimingSetName</label>
+																</div>
+															</div>
+															<div class="d-flex justify-content-center p-3">
+																<div class="form-floating">
+																	<input type="text" class="form-control" id="input_i2c_filename" placeholder="" value="">
+																	<label for="input_i2c_filename">FileName</label>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- I2C Input Group End -->
+
+
+
+										<!-- I2C Control Button Begin -->
+										<div class="col">
+											<div class="container-fluid container-border mb-1 p-3">
+												<div class="row d-flex justify-content-center mb-1">
+													<table class="table caption-top table-bordered table-sm border-primary table-primary" style="font-size: xx-small; padding: auto;">
+														<caption>生成设定</caption>
+														<thead>
+															<tr>
+																<th scope="col">Item</th>
+																<th scope="col">Now Value</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+															  <th scope="row">SlaveID</th>
+															  <td id="settingtable_i2c_slaveid">0x6a</td>
+															</tr>
+															<tr>
+															  <th scope="row">I2C_SCL</th>
+															  <td id="settingtable_i2c_sclpin">SCL</td>
+															</tr>
+															<tr>
+															  <th scope="row">I2C_SDA</th>
+															  <td id="settingtable_i2c_sdapin">SDA</td>
+															</tr>
+															<tr>
+																<th scope="row">WFTName</th>
+																<td id="settingtable_i2c_wftname">WFT1</td>
+															</tr>
+															<tr>
+																<th scope="row">FileName</th>
+																<td id="settingtable_i2c_filename">*.csv</td>
+															</tr>
+														  </tbody>
+													</table>
+												</div>
+												<div class="row d-flex justify-content-center">
+													<div class="col-md-6">
+														<div class="d-grid gap-1">
+														<button class="btn btn-primary" id="button_i2c_readini" type="button">从Ini文件读取</button>
+														<button class="btn btn-primary" id="button_i2c_settingcheck" type="button">检查配置</button>
+														</div>
+													</div>
+												
+													<div class="col-md-6">
+														<div class="d-grid gap-1">
+														<button class="btn btn-primary" id="button_i2c_addcommand" type="button">添加命令</button>
+														<button class="btn btn-primary" id="button_i2c_create" type="button">生成</button>
+														</div>
+													</div>
+												</div>
+
+											</div>
+
+											<div class="toast-container position-fixed bottom-0 end-0 p-3">
+												<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+													<div class="toast-header">
+														<img src="./resource/terminator.png" class="rounded me-2" alt="terminator.png" style=" max-width: 15%;max-height: 15%;object-fit: contain;">
+														<strong class="me-auto">来自终结者的提示</strong>
+														<small>11 mins ago</small>
+														<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+													</div>
+		
+													<div class="toast-body">
+														<div id="toastvalue"></div>
+													</div>
+												</div>
+											</div>
+		
+										</div>
+										<!-- I2C Control Button End -->
+										
+										<!-- I2C Command List Begin -->
+										<div class="col">
+											<div class="container-fluid"  style="background-color: antiquewhite;">
+													<div class="border rounded" style="height: 300px; overflow-y: scroll;">
+															<ul class="list-group list-group-numbered" id="commandlist_i2c"></ul>
+													</div>
+											</div>
+										</div>
+										<!-- I2C Command List End -->
+										</div>
+									</div>
+									<!-- I2C tab container end-->
+								</form>
+							</div>
+	
+							<div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+								<h3>SPI</h3>
+								<p>将在未来完成...</p>
+							</div>
+	
+							<div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+								<h3>UART</h3>
+								<p>将在未来完成...</p>
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+
+		</div>
+
+		<div class="container-fluid container-border" style="background-color: rgb(193, 224, 153);">
+			<div class="row">
+				<div class="d-flex col-3 container-border">
+					<button class="btn btn-info flex-fill" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Pattern模板</button>
+
+					<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel" style="background-color: #8ba6c9; height: 75%; width: 60%;">
+						<div class="offcanvas-header">
+							<h4 class="offcanvas-title" id="offcanvasScrollingLabel">Pattern模板</h4>
+							<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+						</div>
+						<div class="offcanvas-body">
+							<div class="container-fluid container-border" style="background-color: #98abc4;">
+								<ul class="nav nav-pills flex-column flex-sm-row">
+									<li class="nav-item">
+									<a class="nav-link active" href="#tab1" data-bs-toggle="tab" data-bs-target="#tab1">I2C</a>
+									</li>
+									<li class="nav-item">
+									<a class="nav-link" href="#tab2" data-bs-toggle="tab" data-bs-target="#tab2">SPI</a>
+									</li>
+									<li class="nav-item">
+									<a class="nav-link" href="#tab3" data-bs-toggle="tab" data-bs-target="#tab3">UART</a>
+									</li>
+								</ul>
+					
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="tab1" role="tabpanel">
+										<div class="container-fluid container-border" >
+											<div id="patterntemplate_i2c"></div>
+										</div>
+										
+									</div>
+									<div class="tab-pane fade" id="tab2" role="tabpanel">
+										<div class="container-fluid container-border" >
+											<div id="new_pattern"></div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="tab3" role="tabpanel">
+									<p>将在未来完成...</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="d-flex col-3 container-border">
+					<button class="btn btn-primary" id="consolelog" type="button">consolelog</button>
+				</div>
+			</div>
+			
+		</div>
+
+		
+		<div class="container-fluid container-border">
+			<h3 class="badge bg-primary text-wrap" style="width: 6rem;">Web Console</h3>
+			<ul class="list-group" id="webconsolelist" style="height: 280px; overflow-y: scroll;"></ul>
+		</div>
+
+
+	<!-- <div id="mytable"></div> -->
+
+
+
+
+	
+	<!-- 导入JS -->
+	<script src="./import/js/jexcel.js"></script>
+	<script src="./import/js/jsuites.js"></script>
+	<script src="./import/js/popper.min.js"></script>
+	<script src="./import/js/jquery.min.js"></script>
+	<script src="./import/js/bootstrap.min.js"></script>
+	<script src="./import/js/bootstrap.bundle.min.js"></script>
+	<!-- <script src = "./js/patterntemplate.js"></script> -->
+	<script src="./js/main.js" type="module"></script>
+	<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
