@@ -2,7 +2,7 @@ const maxItems = 30;
 const webconsole_list = document.getElementById('webconsolelist');
 export const commandlist = document.getElementById("commandlist_i2c");
 
-export const setting_i2c = {"scl":"SCL","sda":"SDA","wftname":"WFT1","patternfilename":"1.csv"};
+export const setting_i2c = {"slaveid":"0x00", "scl":"SCL","sda":"SDA","wftname":"WFT1","patternfilename":"1.csv"};
 // const command_i2c = {"mode":"C", "slaveid":"0x00","address":"0x00","data":"0x00"};
 
 // // 添加新的列表项
@@ -194,7 +194,19 @@ export function settingcheck() {
         return 0;
     }
 
-    logMessage('webconsolelist','info',`setting_i2c: ${JSON.stringify(setting_i2c)} 设置成功`);
+    updatesettingtable(setting_i2c);
     return 1;
 }
 
+function updatesettingtable(setting) {
+    const tableitem  = [document.getElementById('settingtable_i2c_slaveid'),
+                        document.getElementById('settingtable_i2c_sclpin'),
+                        document.getElementById('settingtable_i2c_sdapin'),
+                        document.getElementById('settingtable_i2c_wftname'),
+                        document.getElementById('settingtable_i2c_filename')];
+    tableitem[1].textContent = setting.scl;
+    tableitem[2].textContent = setting.sda;
+    tableitem[3].textContent = setting.wftname;
+    tableitem[4].textContent = setting.patternfilename;
+    logMessage('webconsolelist','info',`setting_i2c: ${JSON.stringify(setting_i2c)} 更新成功`);
+}

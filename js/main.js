@@ -3,7 +3,7 @@
 // author: nathan zhu
 import { addItem ,logMessage,AddCommand,settingcheck,setting_i2c,commandlist } from "./utilities.js";
 import { sendRequest } from "./server.js";
-
+import { isfileExist } from "./filecheck.js";
 // import { pattern_i2c } from "./patterntemplate.js";
 // import { getData } from "../import/js/jexcel.js";
 
@@ -49,7 +49,7 @@ import { sendRequest } from "./server.js";
   
 const pattern_i2c = jspreadsheet(document.getElementById('patterntemplate_i2c'), {
     // data: data,
-    csv:'./create/i2c_write.csv',
+    csv:'./patterntemplate/i2c_write.csv',
     tableOverflow:true,
     tableHeight:'500px',
     // tableWidth:'1000px',
@@ -97,9 +97,7 @@ function hexToBinaryArray(hexString) {
   
 
 function consolelog(elm) {
-//   console.log(pattern_i2c.getRowData(0));
-  // pattern_i2c.exportAsCSV();
-//   pattern_i2c.download();
+
 return;
 }
 
@@ -108,6 +106,8 @@ function webinit() {
     addItem({"mode":"C", "slaveid":"0x6c","address":"0x03","data":"0xaa"});
     // addItem({"mode":"E", "slaveid":"0x6c","address":"0x03","data":"0xaa"});// 无效的格式，不会添加新项
 
+    isfileExist('./patterntemplate/i2c_write.csv').then(exists => console.log('file ./patterntemplate/i2c_write.csv exists: '+ exists));
+  
 
     // 示例：添加新的信息
     logMessage('webconsolelist', 'warning', 'Something went wrong!');
