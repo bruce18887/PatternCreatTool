@@ -4,48 +4,7 @@
 import { logMessage,AddCommand,settingcheck,setting_i2c,commandlist,commandlist_i2c } from "./utilities.js";
 import { sendRequest } from "./server.js";
 import { isfileExist } from "./filecheck.js";
-// import { pattern_i2c } from "./patterntemplate.js";
-// import { getData } from "../import/js/jexcel.js";
-
-// const data = [
-//     ['STRAT', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'repeat 10', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'repeat 10', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'repeat 10', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['', 'WFT1', 'nop', '0', '1'],
-//     ['STOP', 'WFT1', 'nop', '0', '1'],
-//     ];
+import { hexToBinaryArray } from "./format.js";
   
 const pattern_i2c = jspreadsheet(document.getElementById('patterntemplate_i2c'), {
     // data: data,
@@ -68,35 +27,6 @@ const pattern_i2c = jspreadsheet(document.getElementById('patterntemplate_i2c'),
     columnDrag: true,
 });
 
-const binaryMap = {
-"0": ["0", "0", "0", "0"],
-"1": ["0", "0", "0", "1"],
-"2": ["0", "0", "1", "0"],
-"3": ["0", "0", "1", "1"],
-"4": ["0", "1", "0", "0"],
-"5": ["0", "1", "0", "1"],
-"6": ["0", "1", "1", "0"],
-"7": ["0", "1", "1", "1"],
-"8": ["1", "0", "0", "0"],
-"9": ["1", "0", "0", "1"],
-"a": ["1", "0", "1", "0"],
-"b": ["1", "0", "1", "1"],
-"c": ["1", "1", "0", "0"],
-"d": ["1", "1", "0", "1"],
-"e": ["1", "1", "1", "0"],
-"f": ["1", "1", "1", "1"],
-};
-
-function hexToBinaryArray(hexString) {
-    const binaryArray = hexString
-        .split("") // 将字符串拆分为单个字符数组
-        .map((hex) => binaryMap[hex.toLowerCase()]) // 将每个 16 进制数字转换为长度为 4 的二进制字符串数组
-        .flat(); // 将所有二进制字符串数组拼接为一个数组
-
-    return binaryArray;
-}
-  
-  
 
 function consolelog(elm) {
 
@@ -107,17 +37,14 @@ function webinit() {
     isfileExist('./patterntemplate/i2c_write.csv').then(exists => console.log('file ./patterntemplate/i2c_write.csv exists: '+ exists));
     // 添加示例项
     const truerowindex = commandlist_i2c.getColumnData(0).length;
-    console.log(truerowindex);
+    // console.log(truerowindex);
     if (commandlist_i2c.getCellFromCoords(0,0).innerText == '') {
-        console.log('empty');
+        // console.log('empty');
         commandlist_i2c.setRowData(0,['C','0x30','0x55']);
     }
     //第一个参数是数组，第二个参数是插入的行号，第三个参数是之前还是之后
     commandlist_i2c.insertRow(['D','0x30','0x55'],truerowindex,false);
     // addItem({"mode":"E", "slaveid":"0x6c","address":"0x03","data":"0xaa"});// 无效的格式，不会添加新项
-
-    
-  
 
     // 示例：添加新的信息
     logMessage('webconsolelist', 'warning', 'Something went wrong!');
@@ -165,20 +92,10 @@ function createfile(){
 
             // pattern 切片
             const start_zone = alldata.slice(0, indexesofsdaslaveid[0]);
- 
-
             const slaveid_zone = alldata.slice(indexesofsdaslaveid[0] , indexesofsdaslaveid[indexesofsdaslaveid.length -1] + 1);
-  
-
             const address_zone = alldata.slice(indexesofsdaaddress[0] , indexesofsdaaddress[indexesofsdaaddress.length -1] + 1);
-    
-
             const data_zone = alldata.slice(indexesofsdaata[0] , indexesofsdaata[indexesofsdaata.length -1] + 1);
-
-
             const ack_zone = alldata.slice(indexesofsdaslaveid[indexesofsdaslaveid.length -1] + 1, indexesofsdaaddress[0]);
-
-
             const end_zone = alldata.slice(indexesofsdaata[indexesofsdaata.length -1] + 1 + ack_zone.length, alldata.length);
 
             // 拼接pattern
@@ -244,6 +161,7 @@ function createfile(){
 
 // 初始化
 webinit();
+
 //添加按钮监听事件，当点击按钮时，执行getInputValue函数
 const addbutton = document.getElementById('button_i2c_addcommand');
 addbutton.addEventListener('click', AddCommand);

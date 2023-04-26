@@ -1,7 +1,6 @@
 const maxItems = 30;
 const webconsole_list = document.getElementById('webconsolelist');
 export const commandlist = document.getElementById("commandlist_i2c");
-
 export const setting_i2c = {"slaveid":"0x00", "scl":"SCL","sda":"SDA","wftname":"WFT1","patternfilename":"1.csv"};
 const command_i2c = {"mode":"C","address":"0x00","data":"0x00"};
 
@@ -24,10 +23,6 @@ function addItem(command) {
         logMessage("webconsolelist", "danger", `command_i2c: ${JSON.stringify(command)} 格式错误`);
     }
 }
-
-
-
-
 
 
 // 添加新的列表项
@@ -62,7 +57,6 @@ export function logMessage(logId, type, message) {
     //     return message;
     // };
   
-
     // 创建新的列表项
     const item = document.createElement('li');
     item.classList.add('list-group-item');
@@ -72,7 +66,6 @@ export function logMessage(logId, type, message) {
     <i class="bi bi-${type === 'warning' ? 'exclamation-triangle-fill text-warning' : type === 'danger' ? 'x-octagon-fill text-danger' : 'info-circle-fill text-info'}" style="margin-right: 8px;"></i>
     ${addHrefToFilename(message)}
     `;
-
 
     // 将新的列表项添加到列表中
     webconsole_list.appendChild(item);
@@ -106,16 +99,10 @@ function inputformatcheck(input) {
     const regex = /^0x[0-9a-fA-F]{2}$/;
     return regex.test(input);
 }
-  
-
-
 // 获取输入框的值
 function getInputValue(inputid) {
     // 获取输入框的值
-    const inputvalue = document.getElementById(inputid).value;
-    return inputvalue;
-    // calltoast(showtext);
-    // logMessage('webconsolelist', 'info', showtext);
+    return document.getElementById(inputid).value;
 }
 
 // 执行添加命令
