@@ -36,6 +36,19 @@
 			background-color: #d1ecf1;
 			border-color: #bee5eb;
 		}
+		/* 更改表头和单元格背景色 */
+		.jexcel thead th{
+		background-color: #1c83eb;
+		}
+		.jexcel tbody td {
+		background-color: #34a7bb;
+		}
+		/* 修改选中单元格的背景色 */
+		.jexcel td.highlight {
+		background-color: #ffcc00 !important; /* 将黄色设置为高亮颜色 */
+		}
+
+
 		/* 隐藏了轮播指示器 */
 		/* .carousel-indicators {
 			display: none;
@@ -235,9 +248,14 @@
 										
 										<!-- I2C Command List Begin -->
 										<div class="col">
-											<div class="container-fluid"  style="background-color: antiquewhite;">
-													<div class="border rounded" style="height: 300px; overflow-y: scroll;">
+											<div class="container-fluid container-border "  style="background-color: antiquewhite;">
+													<!-- old -->
+													<!-- <div class="border rounded" style="height: 300px; overflow-y: scroll;">
 															<ul class="list-group list-group-numbered" id="commandlist_i2c"></ul>
+													</div> -->
+													<!-- new -->
+													<div class="border rounded" style="height: 300px; overflow-y: scroll;">
+													<div id="commandlist_i2c"></div>
 													</div>
 											</div>
 										</div>

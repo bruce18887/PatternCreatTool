@@ -3,57 +3,32 @@ const webconsole_list = document.getElementById('webconsolelist');
 export const commandlist = document.getElementById("commandlist_i2c");
 
 export const setting_i2c = {"slaveid":"0x00", "scl":"SCL","sda":"SDA","wftname":"WFT1","patternfilename":"1.csv"};
-// const command_i2c = {"mode":"C", "slaveid":"0x00","address":"0x00","data":"0x00"};
-
-// // 添加新的列表项
-// export function addItem(format, value1, value2) {
-//     // 创建一个新的列表项
-//     var newItem = document.createElement("li");
-//     newItem.classList.add("list-group-item", "list-group-item-action");
-//     if (format === 'C') {
-//         newItem.classList.add("list-group-item-primary");
-//         newItem.classList.add("format-c");
-//         newItem.textContent = "C, " + value1 + ", " + value2;
-//     } else if (format === 'D') {
-//         newItem.classList.add("list-group-item-secondary");
-//         newItem.classList.add("format-d");
-//         newItem.textContent = "D, " + value1 + ", " + value2;
-//     } else {
-//         logMessage("webconsolelist", "danger", "Invalid format: " + format);
-//         return;
-//     }
-//     // alert(newItem.textContent)
-//     // 将新项添加到列表中
-//     commandlist.appendChild(newItem);
-// }
-
- const command_i2c = {"mode":"C", "slaveid":"0x00","address":"0x00","data":"0x00"};
+const command_i2c = {"mode":"C","address":"0x00","data":"0x00"};
 
 // 添加新的列表项
-export function addItem(command) {
-    const format = command.mode;
-    const value1 = command.address;
-    const value2 = command.data;
-    
-    // 创建一个新的列表项
-    var newItem = document.createElement("li");
-    newItem.classList.add("list-group-item", "list-group-item-action");
-    if (format === 'C') {
-        newItem.classList.add("list-group-item-primary");
-        newItem.classList.add("format-c");
-        newItem.textContent = `C, ${value1}, ${value2}`;
-    } else if (format === 'D') {
-        newItem.classList.add("list-group-item-secondary");
-        newItem.classList.add("format-d");
-        newItem.textContent = `D, ${value1}, ${value2}`;
-    } else {
-        logMessage("webconsolelist", "danger", `command_i2c: ${JSON.stringify(command)} 格式错误`);
-        return;
+function addItem(command) {
+    const truerowindex = commandlist_i2c.getColumnData(0).length;
+    if (command.mode === 'C'||command.mode === 'D') {
+        // 判断是否为第一行且为空
+        if ((truerowindex-1)===0 && commandlist_i2c.getCellFromCoords(0,0).innerText==="") {
+            commandlist_i2c.setRowData(0,[command.mode,command.address,command.data]);
+        }
+        else if (truerowindex!=0){
+            commandlist_i2c.insertRow([command.mode,command.address,command.data],truerowindex,false);
+        }
+        else{
+            logMessage("webconsolelist", "danger", `command_i2c: ${JSON.stringify(command)} 插入出现问题`);
+        }
     }
-    // alert(newItem.textContent)
-    // 将新项添加到列表中
-    commandlist.appendChild(newItem);
+    else{
+        logMessage("webconsolelist", "danger", `command_i2c: ${JSON.stringify(command)} 格式错误`);
+    }
 }
+
+
+
+
+
 
 // 添加新的列表项
 export function logMessage(logId, type, message) {
@@ -143,17 +118,16 @@ function getInputValue(inputid) {
     // logMessage('webconsolelist', 'info', showtext);
 }
 
+// 执行添加命令
 export function AddCommand() {
     // command.mode = getInputValue('input_i2c_mode');
-    command_i2c.mode = 'C';
-    command_i2c.slaveid = getInputValue('input_i2c_slaveid');
+    command_i2c.mode = 'D';
     command_i2c.address = getInputValue('input_i2c_address');
     command_i2c.data = getInputValue('input_i2c_data');
-
-    // 检查输入框的值是否符合格式
-    if (inputformatcheck(command_i2c.slaveid) && inputformatcheck(command_i2c.address) && inputformatcheck(command_i2c.data)) {
+        // 检查输入框的值是否符合格式
+    if (inputformatcheck(getInputValue('input_i2c_slaveid')) && inputformatcheck(command_i2c.address) && inputformatcheck(command_i2c.data)) {
         // 添加新的列表项
-        addItem('C', command_i2c.address, command_i2c.data);
+        addItem(command_i2c);
         // 弹出toast提示
         logMessage('webconsolelist', 'info', `command_i2c: ${JSON.stringify(command_i2c)} 添加成功`);
     }
@@ -163,7 +137,44 @@ export function AddCommand() {
 
 }
 
+export const commandlist_i2c = jspreadsheet(document.getElementById('commandlist_i2c'), {
+    data:[[]],
+    // minSpareRows:1,//空余行
+    textOverflow: true,
+    columns: [
+        { type: 'text', title: '模式', width: 50, },
+        { type: 'text', title: '地址', width: 120,}, 
+        { type: 'text', title: '数据', width: 120,},
+      ],
+    rowDrag: true,//行拖动
+    columnDrag: false,//禁止列拖动
+    allowSorting: false, // 关闭代码排序功能
+    columnSorting: false, // 关闭列排序功能
+    allowExport: false, // 关闭导出功能
+    columnResize: false, // 关闭列宽调整功能
+    editable: false, // 关闭编辑功能
+    allowInsertColumn: false, // 关闭插入列功能
+    allowRenameColumn: false, // 关闭重命名列功能
+    autoIncrement: false, // 关闭自动增量功能
+    allowManualInsertColumn: false, // 关闭手动插入列功能
+    allowInsertRow: true, 
+    allowManualInsertRow: false, // 关闭手动插入行功能
+    allowDeleteColumn: false, // 关闭删除列功能
+});
+
+
 export function settingcheck() {
+
+    const inputslaveid = getInputValue('input_i2c_slaveid'); // 获取输入框的值
+    const regex4 = /^0x[0-9a-fA-F]{2}$/; // 定义正则表达式
+    if (regex4.test(inputslaveid)) {
+        setting_i2c.slaveid = inputslaveid;
+    } else {
+        logMessage('webconsolelist', 'warning', `SlaveID: ${inputslaveid} 错误的值`);
+        return 0;
+    }
+
+
     const inputpins = getInputValue('input_i2c_signals'); // 获取输入框的值
     const regex = /^[a-zA-Z]\w*,\s*[a-zA-Z]\w*$/; // 定义正则表达式
     if (regex.test(inputpins)) {
@@ -171,7 +182,7 @@ export function settingcheck() {
         setting_i2c.scl = scl;
         setting_i2c.sda = sda;
     } else {
-        logMessage('webconsolelist', 'danger', `Signals: ${inputpins} 格式错误`);
+        logMessage('webconsolelist', 'warning', `Signals: ${inputpins} 格式错误`);
         return 0;
     }
 
@@ -180,7 +191,7 @@ export function settingcheck() {
     if (regex2.test(inputwftname)) {
         setting_i2c.wftname = inputwftname;
     } else {
-        logMessage('webconsolelist', 'danger', `WFT Name: ${inputwftname} 格式错误`);
+        logMessage('webconsolelist', 'warning', `WFT Name: ${inputwftname} 格式错误`);
         return 0;
     }
 
@@ -190,7 +201,7 @@ export function settingcheck() {
         setting_i2c.patternfilename = inputfilename;
     }
     else {
-        logMessage('webconsolelist', 'danger', `Filename: ${inputfilename} 格式错误`);
+        logMessage('webconsolelist', 'warning', `Filename: ${inputfilename} 格式错误`);
         return 0;
     }
 

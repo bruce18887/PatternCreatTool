@@ -1,7 +1,7 @@
 // this is the html script start point
 // 2023.4.23
 // author: nathan zhu
-import { addItem ,logMessage,AddCommand,settingcheck,setting_i2c,commandlist } from "./utilities.js";
+import { logMessage,AddCommand,settingcheck,setting_i2c,commandlist,commandlist_i2c } from "./utilities.js";
 import { sendRequest } from "./server.js";
 import { isfileExist } from "./filecheck.js";
 // import { pattern_i2c } from "./patterntemplate.js";
@@ -53,7 +53,8 @@ const pattern_i2c = jspreadsheet(document.getElementById('patterntemplate_i2c'),
     tableOverflow:true,
     tableHeight:'500px',
     // tableWidth:'1000px',
-    csvHeaders:true,
+    includeHeadersOnDownload:true,//下载时是否包含表头
+    csvHeaders:true,//导入时是否包含表头
     columns: [
       { type: 'text', title: 'Label', width: 120},
       { type: 'text', title: 'WFT', width: 100 },
@@ -65,7 +66,7 @@ const pattern_i2c = jspreadsheet(document.getElementById('patterntemplate_i2c'),
     allowSorting: false, // 关闭代码排序功能
     columnSorting: false, // 关闭列排序功能
     columnDrag: true,
-  });
+});
 
 const binaryMap = {
 "0": ["0", "0", "0", "0"],
@@ -85,6 +86,7 @@ const binaryMap = {
 "e": ["1", "1", "1", "0"],
 "f": ["1", "1", "1", "1"],
 };
+
 function hexToBinaryArray(hexString) {
     const binaryArray = hexString
         .split("") // 将字符串拆分为单个字符数组
@@ -102,170 +104,142 @@ return;
 }
 
 function webinit() {
+    isfileExist('./patterntemplate/i2c_write.csv').then(exists => console.log('file ./patterntemplate/i2c_write.csv exists: '+ exists));
     // 添加示例项
-    addItem({"mode":"C", "slaveid":"0x6c","address":"0x03","data":"0xaa"});
+    const truerowindex = commandlist_i2c.getColumnData(0).length;
+    console.log(truerowindex);
+    if (commandlist_i2c.getCellFromCoords(0,0).innerText == '') {
+        console.log('empty');
+        commandlist_i2c.setRowData(0,['C','0x30','0x55']);
+    }
+    //第一个参数是数组，第二个参数是插入的行号，第三个参数是之前还是之后
+    commandlist_i2c.insertRow(['D','0x30','0x55'],truerowindex,false);
     // addItem({"mode":"E", "slaveid":"0x6c","address":"0x03","data":"0xaa"});// 无效的格式，不会添加新项
 
-    isfileExist('./patterntemplate/i2c_write.csv').then(exists => console.log('file ./patterntemplate/i2c_write.csv exists: '+ exists));
+    
   
 
     // 示例：添加新的信息
     logMessage('webconsolelist', 'warning', 'Something went wrong!');
     logMessage('webconsolelist', 'danger', 'fatal error!');
     logMessage('webconsolelist', 'info', 'welcome to use this tool!');
+    logMessage('webconsolelist', 'info', 'Now this tool is on Ver-0.1 demo for use!');
 }
 // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 // const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 
+
 function createfile(){
-    // if (settingcheck()) {
-    //     sendRequest(setting_i2c.patternfilename);
-    // }
-    // if (settingcheck()) {
-        const conmmandlistitems = commandlist.querySelectorAll('.list-group-item');
-        // for (const item of conmmandlistitems) {
-        //     console.log(item.textContent);
-        // }
-        const command1 = conmmandlistitems[0].textContent;
-        console.log(command1);
-        // pattern_i2c.options.csvFileName = 'pattern_i2c';
-        pattern_i2c.options.csvFileName = setting_i2c.patternfilename.replace(/.csv/g, '');
-        // pattern_i2c.setHeader(3,setting_i2c.scl);
-        // pattern_i2c.setHeader(4,setting_i2c.sda);
-        //console.log(pattern_i2c.getData());
-        const findIndexes = (array, char) => array.flatMap((element, index) => element === char ? index : []).filter(Boolean);
-
-        const sdadata = pattern_i2c.getColumnData(4);
-        
-        // 找到所有的 'S' 索引值
-        const indexesofsdaslaveid = findIndexes(sdadata, 'S');        
-        // 找到所有的 'A' 索引值
-        const indexesofsdaaddress = findIndexes(sdadata, 'A');
-        // 找到所有的 'D' 索引值
-        const indexesofsdaata = findIndexes(sdadata, 'D');
-
-        // sda 采样点数
-        const sdarepeattimes = indexesofsdaslaveid.length / 8;
-        if ( sdarepeattimes %1 === 0)  {
-            logMessage('webconsolelist', 'info', 'pattern template sda column is valid!');
-        }
-        // 获取所有的数据
-        const alldata = pattern_i2c.getData();
-
-        // pattern 切片
-        const start_zone = alldata.slice(0, indexesofsdaslaveid[0]);
-        console.log('start zone:');
-        console.log(start_zone);
-
-        const slaveid_zone = alldata.slice(indexesofsdaslaveid[0] , indexesofsdaslaveid[indexesofsdaslaveid.length -1] + 1);
-        console.log('slaveid zone:');
-        console.log(slaveid_zone);
-
-        const address_zone = alldata.slice(indexesofsdaaddress[0] , indexesofsdaaddress[indexesofsdaaddress.length -1] + 1);
-        console.log('address zone:');
-        console.log(address_zone);
-
-        const data_zone = alldata.slice(indexesofsdaata[0] , indexesofsdaata[indexesofsdaata.length -1] + 1);
-        console.log('data zone:');
-        console.log(data_zone);
-
-        const ack_zone = alldata.slice(indexesofsdaslaveid[indexesofsdaslaveid.length -1] + 1, indexesofsdaaddress[0]);
-        console.log('ack zone:');
-        console.log(ack_zone);
-
-        const end_zone = alldata.slice(indexesofsdaata[indexesofsdaata.length -1] + 1 + ack_zone.length, alldata.length);
-        console.log('end zone:');
-        console.log(end_zone);
-
-        
-        // 生成纯16进制字符
-        const splitHexString = hexString => hexString.split(',').map(hex => hex.trim().replace(/^0x/, ''));
-
-
-        const generatorcommand = {"mode":"C","address":"00","data":"00"};
-        
-        const arr = splitHexString(command1);
-        console.log(arr);
-        generatorcommand.mode = arr[0];
-        generatorcommand.address = arr[1];
-        generatorcommand.data = arr[2];
-        console.log("generatorcommand");
-        console.log(generatorcommand);
-         
-        let address_bin_array = hexToBinaryArray(generatorcommand.address);
-        let data_bin_array = hexToBinaryArray(generatorcommand.data);
-        let slaveid_bin_array = hexToBinaryArray('6a');
-        console.log(address_bin_array);
-        console.log(data_bin_array);
 
         // 重复数组元素
         const repeatybinarry  = (binarray,times) => binarray.reduce((acc, val) => acc.concat(Array(times).fill(val)), []);
+        console.log(commandlist_i2c.getData());
+        const generatorcommand = {"mode":"C","address":"00","data":"00"};
+        const command_translist = commandlist_i2c.getData();
 
-        // 将slaveid写入进slaveid_zone
-        slaveid_bin_array = repeatybinarry(slaveid_bin_array,sdarepeattimes);
-        for (let rowindex in slaveid_zone)
-        {
-            slaveid_zone[rowindex][4] = slaveid_bin_array[rowindex];
-        }
-        for (let rowindex in slaveid_zone)
-        {
-            console.log(slaveid_zone[rowindex][4]);
-        }
+        if (settingcheck()) {
 
-        // 将address写入进address_zone
-        address_bin_array = repeatybinarry(address_bin_array,sdarepeattimes);
-        for (let rowindex in address_zone)
-        {
-            address_zone[rowindex][4] = address_bin_array[rowindex];
-        }
-        for (let rowindex in address_zone)
-        {
-            console.log(address_zone[rowindex][4]);
-        }
-        // 将data写入进data_zone
-        data_bin_array = repeatybinarry(data_bin_array,sdarepeattimes);
-        for (let rowindex in data_zone)
-        {
-            data_zone[rowindex][4] = data_bin_array[rowindex];
-        }
-        for (let rowindex in data_zone)
-        {
-            console.log(data_zone[rowindex][4]);
-        }
+            const findIndexes = (array, char) => array.flatMap((element, index) => element === char ? index : []).filter(Boolean);
 
-        // 拼接pattern
-        const compeletepatterndata = start_zone.concat(slaveid_zone).concat(ack_zone).concat(address_zone).concat(ack_zone).concat(data_zone).concat(ack_zone).concat(end_zone);
-        consolelog("pattern");
-        console.log(compeletepatterndata);
+            const sdadata = pattern_i2c.getColumnData(4);
+            
+            // 找到所有的 'S' 索引值
+            const indexesofsdaslaveid = findIndexes(sdadata, 'S');        
+            // 找到所有的 'A' 索引值
+            const indexesofsdaaddress = findIndexes(sdadata, 'A');
+            // 找到所有的 'D' 索引值
+            const indexesofsdaata = findIndexes(sdadata, 'D');
 
-        const new_pattern = jspreadsheet(document.getElementById('new_pattern'), {
-            data: compeletepatterndata,
-            // includeHeadersOnDownload:true,
-            columns: [
-              { type: 'text', title: 'Label', width: 120},
-              { type: 'text', title: 'WFT', width: 100 },
-              { type: 'text', title: 'Sequence', width: 100 },
-              { type: 'text', title: 'SCL', width: 200},
-              { type: 'text', title: 'SDA', width: 200},
-              { type: 'text', title: ' ', width: 200},
-            ],
-            allowSorting: false, // 关闭代码排序功能
-            columnSorting: false, // 关闭列排序功能
-            columnDrag: true,
-          });
-        new_pattern.download(true);
-        // console.log("address_zone updated");
-        // console.log(address_zone);
+            // sda 采样点数
+            const sdarepeattimes = indexesofsdaslaveid.length / 8;
+            if ( sdarepeattimes %1 === 0)  {
+                logMessage('webconsolelist', 'info', 'pattern template sda column is valid!');
+            }
+            else {
+                logMessage('webconsolelist', 'danger', 'pattern template sda column is invalid!');
+                return;
+            }
+            // 获取所有的数据
+            const alldata = pattern_i2c.getData();
 
-        // for (const index of indexes) {
-        //     console.log(pattern_i2c.getCellFromCoords(4,index));
-        // }
+            // pattern 切片
+            const start_zone = alldata.slice(0, indexesofsdaslaveid[0]);
+ 
 
-        // console.log(pattern_i2c.getColumnData(3));
-        // console.log(pattern_i2c.getColumnData(4));
+            const slaveid_zone = alldata.slice(indexesofsdaslaveid[0] , indexesofsdaslaveid[indexesofsdaslaveid.length -1] + 1);
+  
+
+            const address_zone = alldata.slice(indexesofsdaaddress[0] , indexesofsdaaddress[indexesofsdaaddress.length -1] + 1);
+    
+
+            const data_zone = alldata.slice(indexesofsdaata[0] , indexesofsdaata[indexesofsdaata.length -1] + 1);
+
+
+            const ack_zone = alldata.slice(indexesofsdaslaveid[indexesofsdaslaveid.length -1] + 1, indexesofsdaaddress[0]);
+
+
+            const end_zone = alldata.slice(indexesofsdaata[indexesofsdaata.length -1] + 1 + ack_zone.length, alldata.length);
+
+            // 拼接pattern
+            let compeletepatterndata = [];
+            for (const item of command_translist) {
+                //转换前去掉 0x 
+                let slaveid_bin_array = hexToBinaryArray(setting_i2c.slaveid.replace('0x',''));
+                let address_bin_array = hexToBinaryArray(item[1].replace('0x',''));
+                let data_bin_array = hexToBinaryArray(item[2].replace('0x',''));
+
+                // 将slaveid写入进slaveid_zone
+                slaveid_bin_array = repeatybinarry(slaveid_bin_array,sdarepeattimes);
+                for (let rowindex in slaveid_zone)
+                {
+                    slaveid_zone[rowindex][4] = slaveid_bin_array[rowindex];
+                }
+                console.log("slaveid_zone")
+                console.log(slaveid_zone);
+                // 将address写入进address_zone
+                address_bin_array = repeatybinarry(address_bin_array,sdarepeattimes);
+                for (let rowindex in address_zone)
+                {
+                    address_zone[rowindex][4] = address_bin_array[rowindex];
+                }
+                console.log("address_zone")
+                console.log(address_zone);
+                // 将data写入进data_zone
+                data_bin_array = repeatybinarry(data_bin_array,sdarepeattimes);
+                for (let rowindex in data_zone)
+                {
+                    data_zone[rowindex][4] = data_bin_array[rowindex];
+                }
+                console.log("data_zone")
+                console.log(data_zone);
+                compeletepatterndata = compeletepatterndata.concat(slaveid_zone, ack_zone,address_zone,ack_zone,data_zone);
+            }
+            compeletepatterndata = start_zone.concat(compeletepatterndata,end_zone);
+            console.log("compeletepatterndata")
+            console.log(compeletepatterndata);
+            const new_pattern = jspreadsheet(document.getElementById('new_pattern'), {
+                data: compeletepatterndata,
+                // includeHeadersOnDownload:true,
+                columns: [
+                { type: 'text', title: 'Label', width: 120},
+                { type: 'text', title: 'WFT', width: 100 },
+                { type: 'text', title: 'Sequence', width: 100 },
+                { type: 'text', title: 'SCL', width: 200},
+                { type: 'text', title: 'SDA', width: 200},
+                { type: 'text', title: ' ', width: 200},
+                ],
+                allowSorting: false, // 关闭代码排序功能
+                columnSorting: false, // 关闭列排序功能
+                columnDrag: true,
+            });
+
+            new_pattern.setHeader(3,setting_i2c.scl);
+            new_pattern.setHeader(4,setting_i2c.sda);
+            new_pattern.options.csvFileName = setting_i2c.patternfilename.replace(/.csv/g, '');
+            new_pattern.download(true);
         
-    // }
+        }
 }
 
 // 初始化
