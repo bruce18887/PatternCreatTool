@@ -14276,9 +14276,12 @@ if (! jSuites && typeof(require) === 'function') {
             headers.children[j].classList.remove('selected');
             content.children[j].style.display = 'none';
         }
-        headers.children[headers.children.length - 1].classList.add('selected');
-        content.children[headers.children.length - 1].style.display = 'block';
-
+        // orign
+        // headers.children[headers.children.length - 1].classList.add('selected');
+        // content.children[headers.children.length - 1].style.display = 'block';
+        // new 固定激活第一个
+        headers.children[0].classList.add('selected');
+        content.children[0].style.display = 'block';
         return instances;
     }
 

@@ -673,7 +673,7 @@
     display:none;
 }
 
-.jexcel_tabs .jexcel_tab_link
+/* .jexcel_tabs .jexcel_tab_link
 {
     display:inline-block;
     padding:10px;
@@ -683,11 +683,25 @@
     margin-bottom:5px;
     background-color:#f3f3f3;
     cursor:pointer;
+} */
+.jexcel_tabs .jexcel_tab_link
+{
+    display:inline-block;
+    padding:5px;
+    padding-left:20px;
+    padding-right:20px;
+    margin-right:5px;
+    margin-bottom:5px;
+    background-color:#f3f3f3;
+    cursor:pointer;
+    font-weight: bold;
+    
 }
 
 .jexcel_tabs .jexcel_tab_link.selected
 {
-    background-color:#ddd;
+    /* background-color:#ddd; */
+    background-color:#dcdf34;
 }
 
 .jexcel_hidden_index > tbody > tr > td:first-child,

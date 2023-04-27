@@ -1,15 +1,17 @@
 <!doctype html>
 <html lang="en">
-	<title>Demo</title><!-- 浏览器上的标题 -->
+	
 	<head>
+		<title>Demo</title><!-- 浏览器上的标题 -->
 		<meta charset="UTF-8">
-		
-		<!-- 导入Jexcel CSS -->
-		<link rel="stylesheet" href="./import/css/jspreadsheet.css" type="text/css">
-		<link rel="stylesheet" href="./import/css/jsuites.css" type="text/css">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="./import/css/animate.min.css">
 		<link rel="stylesheet" href="./import/css/bootstrap.min.css">
+		<!-- 导入Jexcel CSS -->
+		<link rel="stylesheet" href="./import/css/jspreadsheet.css" type="text/css">
+		<link rel="stylesheet" href="./import/css/jsuites.css" type="text/css">
+
 
 		<style>
 		/* 自定义样式 */
@@ -47,14 +49,19 @@
 		.jexcel td.highlight {
 		background-color: #ffcc00 !important; /* 将黄色设置为高亮颜色 */
 		}
-
-
+		/* column header 背景颜色 */
+		.jexcel_header > thead > tr > td
+		{
+			background-color: #d37272;
+		}
 		/* 隐藏了轮播指示器 */
 		/* .carousel-indicators {
 			display: none;
 		} */
 		</style>
-		
+		<script>
+
+		</script>
 	</head>
 
 	<body>
@@ -178,8 +185,8 @@
 										<div class="col">
 											<div class="container-fluid container-border mb-1 p-3">
 												<div class="row d-flex justify-content-center mb-1">
-													<table class="table caption-top table-bordered table-sm border-primary table-primary" style="font-size: xx-small; padding: auto;">
-														<caption>生成设定</caption>
+													<table class="table caption-top table-bordered table-sm border-primary table-primary" style="font-size: xx-small; padding: auto;width: 92%; ">
+														<caption style="color: #2890d6;font-size: small; ">生成设定</caption>
 														<thead>
 															<tr>
 																<th scope="col">Item</th>
@@ -213,7 +220,8 @@
 												<div class="row d-flex justify-content-center">
 													<div class="col-md-6">
 														<div class="d-grid gap-1">
-														<button class="btn btn-primary" id="button_i2c_readini" type="button">从Ini文件读取</button>
+														<button class="btn btn-primary" id="button_i2c_readini" type="button">
+															从Ini文件读取</button>
 														<button class="btn btn-primary" id="button_i2c_settingcheck" type="button">检查配置</button>
 														</div>
 													</div>
@@ -312,17 +320,19 @@
 								<div class="tab-content">
 									<div class="tab-pane fade show active" id="tab1" role="tabpanel">
 										<div class="container-fluid container-border" >
-											<div id="patterntemplate_i2c"></div>
+											<div class="jexcel_header" id="patterntemplate_i2c"></div>
 										</div>
 										
 									</div>
 									<div class="tab-pane fade" id="tab2" role="tabpanel">
-										<div class="container-fluid container-border" >
+										<div class="container-fluid container-border visually-hidden" >
 											<div id="new_pattern"></div>
 										</div>
 									</div>
 									<div class="tab-pane fade" id="tab3" role="tabpanel">
-									<p>将在未来完成...</p>
+										<div class="container-fluid container-border" >
+											<div id="test"></div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -352,9 +362,9 @@
 	<!-- 导入JS -->
 	<script src="./import/js/jexcel.js"></script>
 	<script src="./import/js/jsuites.js"></script>
-	<script src="./import/js/popper.min.js"></script>
+	<!-- <script src="./import/js/popper.min.js"></script> -->
 	<script src="./import/js/jquery.min.js"></script>
-	<script src="./import/js/bootstrap.min.js"></script>
+	<!-- <script src="./import/js/bootstrap.min.js"></script> -->
 	<script src="./import/js/bootstrap.bundle.min.js"></script>
 	<script src="./js/main.js" type="module"></script>
 	<!-- Code injected by live-server -->

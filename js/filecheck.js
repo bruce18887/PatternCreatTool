@@ -1,6 +1,3 @@
-// to check the web init file is exist or not
-
-
 // 通过 XMLHttpRequest 检测文件是否存在
 // usage: isfileExist('./file.txt').then(exists => { console.log(exists); });
 export function isfileExist(url) {

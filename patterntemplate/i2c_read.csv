@@ -57,6 +57,40 @@ Label,WFT,Sequence,SCL,SDA,
 ,TS1,nop,0,X,//ACK
 ,TS1,repeat 2,1,L,
 ,TS1,nop,0,0,
+,TS1,nop,1,0,//Stop
+,TS1,repeat 2,1,0,
+,TS1,nop,1,1,
+,TS1,repeat 23,1,1,
+,TS1,nop,1,1,//Start
+,TS1,repeat 2,1,0,
+,TS1,nop,0,0,
+,TS1,nop,0,S,//SlaveID
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,S,
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,S,
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,S,
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,S,
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,S,
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,S,
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,S,//RW
+,TS1,repeat 2,1,S,
+,TS1,nop,0,S,
+,TS1,nop,0,X,//ACK
+,TS1,repeat 2,1,L,
+,TS1,nop,0,0,
 ,TS1,nop,0,D,//Data
 ,TS1,repeat 2,1,D,
 ,TS1,nop,0,D,
@@ -81,9 +115,9 @@ Label,WFT,Sequence,SCL,SDA,
 ,TS1,nop,0,D,
 ,TS1,repeat 2,1,D,
 ,TS1,nop,0,D,
-,TS1,nop,0,X,//ACK
-,TS1,repeat 2,1,L,
-,TS1,nop,0,0,
+,TS1,nop,0,X,//NACK
+,TS1,repeat 2,1,X,
+,TS1,nop,0,X,
 ,TS1,nop,1,0,//Stop
 ,TS1,repeat 2,1,0,
 ,TS1,nop,1,1,

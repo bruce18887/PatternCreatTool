@@ -5,21 +5,21 @@ import { logMessage,AddCommand,settingcheck,setting_i2c,commandlist,commandlist_
 import { sendRequest } from "./server.js";
 import { isfileExist } from "./filecheck.js";
 import { hexToBinaryArray } from "./format.js";
-  
+
 const pattern_i2c = jspreadsheet(document.getElementById('patterntemplate_i2c'), {
     // data: data,
     csv:'./patterntemplate/i2c_write.csv',
     tableOverflow:true,
     tableHeight:'500px',
-    // tableWidth:'1000px',
+    tableWidth:'850px',
     includeHeadersOnDownload:true,//下载时是否包含表头
     csvHeaders:true,//导入时是否包含表头
     columns: [
       { type: 'text', title: 'Label', width: 120},
       { type: 'text', title: 'WFT', width: 100 },
       { type: 'text', title: 'Sequence', width: 100 },
-      { type: 'text', title: 'SCL', width: 200},
-      { type: 'text', title: 'SDA', width: 200},
+      { type: 'text', title: 'SCL', width: 100},
+      { type: 'text', title: 'SDA', width: 100},
       { type: 'text', title: 'Comment', width: 200},
     ],
     allowSorting: false, // 关闭代码排序功能
@@ -28,9 +28,11 @@ const pattern_i2c = jspreadsheet(document.getElementById('patterntemplate_i2c'),
 });
 
 
-function consolelog(elm) {
-
-return;
+function consolelog() {
+    const ins = document.getElementById('test').jexcel[0];
+    console.log('ins');
+    console.log(ins);
+    console.log(ins.getData());
 }
 
 function webinit() {
@@ -101,6 +103,10 @@ function createfile(){
             // 拼接pattern
             let compeletepatterndata = [];
             for (const item of command_translist) {
+                // add comment to the trans start
+                slaveid_zone[0][5] = '//' + setting_i2c.slaveid;
+                address_zone[0][5] = '//' + item[1];
+                data_zone[0][5] = '//' + item[2];
                 //转换前去掉 0x 
                 let slaveid_bin_array = hexToBinaryArray(setting_i2c.slaveid.replace('0x',''));
                 let address_bin_array = hexToBinaryArray(item[1].replace('0x',''));
@@ -130,7 +136,7 @@ function createfile(){
                 }
                 console.log("data_zone")
                 console.log(data_zone);
-                compeletepatterndata = compeletepatterndata.concat(slaveid_zone, ack_zone,address_zone,ack_zone,data_zone);
+                compeletepatterndata = compeletepatterndata.concat(slaveid_zone, ack_zone,address_zone,ack_zone,data_zone,ack_zone);
             }
             compeletepatterndata = start_zone.concat(compeletepatterndata,end_zone);
             console.log("compeletepatterndata")
@@ -171,3 +177,63 @@ const createbutton = document.getElementById('button_i2c_create');
 createbutton.addEventListener('click', createfile);
 const co =  document.getElementById('consolelog');
 co.addEventListener('click', consolelog );
+
+var sheets = [
+    {
+        sheetName: 'i2c_write',
+        csv:'./patterntemplate/i2c_write.csv',
+        tableOverflow:true,
+        tableHeight:'500px',
+        tableWidth:'850px',
+        includeHeadersOnDownload:true,//下载时是否包含表头
+        csvHeaders:true,//导入时是否包含表头
+        columns: [
+          { type: 'text', title: 'Label', width: 120},
+          { type: 'text', title: 'WFT', width: 100 },
+          { type: 'text', title: 'Sequence', width: 100 },
+          { type: 'text', title: 'SCL', width: 100},
+          { type: 'text', title: 'SDA', width: 100},
+          { type: 'text', title: 'Comment', width: 200},
+        ],
+        allowSorting: false, // 关闭代码排序功能
+        columnSorting: false, // 关闭列排序功能
+        columnDrag: true,
+    },
+    {
+        sheetName: 'i2c_read',
+        csv:'./patterntemplate/i2c_read.csv',
+        tableOverflow:true,
+        tableHeight:'500px',
+        tableWidth:'850px',
+        includeHeadersOnDownload:true,//下载时是否包含表头
+        csvHeaders:true,//导入时是否包含表头
+        columns: [
+          { type: 'text', title: 'Label', width: 120},
+          { type: 'text', title: 'WFT', width: 100 },
+          { type: 'text', title: 'Sequence', width: 100 },
+          { type: 'text', title: 'SCL', width: 100},
+          { type: 'text', title: 'SDA', width: 100},
+          { type: 'text', title: 'Comment', width: 200},
+        ],
+        allowSorting: false, // 关闭代码排序功能
+        columnSorting: false, // 关闭列排序功能
+        columnDrag: true,
+    }
+];
+ 
+
+const mutisheets = jspreadsheet.tabs(document.getElementById('test'), sheets);
+
+
+
+// const temp2 = document.getElementsByClassName('jexcel_tab');
+// console.log("temp2");
+// console.log(temp2[0]);
+// console.log(temp.jexcel['i2c_write'].getData());
+
+// var worksheet = document.getElementById('test').children[0].querySelector('.selected').getAttribute('data-spreadsheet');
+// Download
+// document.getElementById('test').jexcel['i2c_write'].download();
+// const tablink =  document.getElementsByClassName('jexcel_tab_link');
+// console.log("tablink");
+// console.log(tablink);

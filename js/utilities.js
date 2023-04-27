@@ -127,11 +127,12 @@ export function AddCommand() {
 export const commandlist_i2c = jspreadsheet(document.getElementById('commandlist_i2c'), {
     data:[[]],
     // minSpareRows:1,//空余行
-    textOverflow: true,
+    tableOverflow:true,//表格溢出
+    tableWidth:'450px',//表格宽度
     columns: [
         { type: 'text', title: '模式', width: 50, },
-        { type: 'text', title: '地址', width: 120,}, 
-        { type: 'text', title: '数据', width: 120,},
+        { type: 'text', title: '地址', width: 150,}, 
+        { type: 'text', title: '数据', width: 150,},
       ],
     rowDrag: true,//行拖动
     columnDrag: false,//禁止列拖动
@@ -202,6 +203,7 @@ function updatesettingtable(setting) {
                         document.getElementById('settingtable_i2c_sdapin'),
                         document.getElementById('settingtable_i2c_wftname'),
                         document.getElementById('settingtable_i2c_filename')];
+    tableitem[0].textContent = setting.slaveid; 
     tableitem[1].textContent = setting.scl;
     tableitem[2].textContent = setting.sda;
     tableitem[3].textContent = setting.wftname;
