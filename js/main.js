@@ -219,6 +219,3 @@ const createbutton = document.getElementById('button_i2c_create');
 createbutton.addEventListener('click', createfile);
 const co =  document.getElementById('consolelog');
 co.addEventListener('click', consolelog );
-
-
-

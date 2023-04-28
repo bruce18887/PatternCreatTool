@@ -1,23 +1,5 @@
 import { SplitLabelsToArray,logMessage } from "./utilities.js";
-//i2c_write
-// const i2c_write_zone = {
-//     "start_zone": [],
-//     "slaveid_zone": [],
-//     "address_zone": [],
-//     "data_zone": [],
-//     "ack_zone": [],
-//     "end_zone": []
-// };
-// i2c_read
-// const i2c_zone[1] = {
-//     "start_zone": [],
-//     "slaveid_zone": [],
-//     "address_zone": [],
-//     "data_zone": [],
-//     "ack_zone": [],
-//     "nack_zone": [],
-//     "end_zone": []
-// };
+//i2c_data_zone 数组 0为 write pattern 1为 read pattern
 export const i2c_zone =[{
     "start_zone": [],
     "slaveid_zone": [],
