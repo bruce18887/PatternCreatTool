@@ -85,13 +85,22 @@ function checkList(list) {
 }
 
 // 弹出toast提示
-function calltoast(text) {
+
+export function callTerminator(text) {
+    // 匹配字符串中的文件路径，并将其替换为链接
+    const pattern = /([a-zA-Z]:)?[\/\\]+[\w\-\s\.]+[\/\\]+[\w\-\s\.]+\.[\w]+/g;
+    // const replacedText = text.replace(pattern, '<a href="$&">$&</a>');
+    const replacedText = text.replace(pattern, '<a href="#">$&</a>');//先使用空链接
+    // 将替换后的文本添加到 toastvalue 元素中
     const toastvalue = document.getElementById('toastvalue');
-    toastvalue.textContent = text;
-    const toastLiveExample = document.getElementById('liveToast')
-    const toast = new bootstrap.Toast(toastLiveExample)
-    toast.show()
-}
+    toastvalue.innerHTML = replacedText;
+  
+    // 显示 Toast 组件
+    const toastLiveExample = document.getElementById('liveToast');
+    const toast = new bootstrap.Toast(toastLiveExample);
+    toast.show();
+  }
+  
 
 // 检查输入框的值是否符合格式
 function inputformatcheck(input) {
@@ -108,7 +117,7 @@ function getInputValue(inputid) {
 // 执行添加命令
 export function AddCommand() {
     // command.mode = getInputValue('input_i2c_mode');
-    command_i2c.mode = 'D';
+    command_i2c.mode = document.getElementById('i2c_mode_select').value;
     command_i2c.address = getInputValue('input_i2c_address');
     command_i2c.data = getInputValue('input_i2c_data');
         // 检查输入框的值是否符合格式
@@ -210,3 +219,19 @@ function updatesettingtable(setting) {
     tableitem[4].textContent = setting.patternfilename;
     logMessage('webconsolelist','info',`setting_i2c: ${JSON.stringify(setting_i2c)} 更新成功`);
 }
+
+
+export function SplitLabelsToArray(str) {
+    // 以逗号为分隔符，使用正则表达式将字符串分隔成数组
+    const arr = str.split(/\s*,\s*/);
+    
+    // 返回分隔后的数组
+    return arr;
+}
+export function remove0x(str) {
+    // 使用正则表达式将所有的 0x 或 0X 替换为空字符串
+    const result = str.replace(/0[xX]/g, '');
+    
+    // 返回处理后的字符串
+    return result;
+  }
